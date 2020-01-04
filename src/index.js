@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import LoginPage from './LoginPage';
 import MainPage from './MainPage';
+import UserContext from './UserContext';
 import './index.css';
 
 function Root() {
@@ -11,7 +12,9 @@ function Root() {
   const logout = () => setUser(null);
 
   return user ? (
-    <MainPage currentUser={user} onLogout={logout} />
+    <UserContext.Provider value={user}>
+      <MainPage onLogout={logout} />
+    </UserContext.Provider>
   ) : (
     <LoginPage onLogin={login} />
   );
