@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import LoginPage from './LoginPage';
 import MainPage from './MainPage';
-import UserContext, {
-  UserProvider
-} from './UserContext';
+import { UserProvider, useUser } from './UserContext';
 import './index.css';
 
 function Root() {
-  const { user } = useContext(UserContext);
+  const user = useUser();
   return user ? <MainPage /> : <LoginPage />;
 }
 

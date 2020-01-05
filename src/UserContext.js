@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useState, useContext } from 'react';
 
 const UserContext = React.createContext();
 
@@ -18,6 +18,16 @@ export function UserProvider({ children }) {
       {children}
     </UserContext.Provider>
   )
+}
+
+export function useUser() {
+  const { user } = useContext(UserContext);
+  return user;
+}
+
+export function useUserActions() {
+  const { login, logout } = useContext(UserContext);
+  return { login, logout };
 }
 
 export default UserContext;
