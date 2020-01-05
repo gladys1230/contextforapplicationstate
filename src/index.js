@@ -11,12 +11,15 @@ function Root() {
   const login = user => setUser(user);
   const logout = () => setUser(null);
 
-  return user ? (
-    <UserContext.Provider value={user}>
-      <MainPage onLogout={logout} />
+  const value = {
+    user, login, logout
+
+  }
+
+  return (
+    <UserContext.Provider value={value}>
+      {user ? <MainPage /> : <LoginPage />}
     </UserContext.Provider>
-  ) : (
-    <LoginPage onLogin={login} />
   );
 }
 

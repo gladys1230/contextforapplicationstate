@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import { login } from './api';
+import React, { useState, useContext } from 'react';
+import * as API from './api';
+import UserContext from './UserContext';
 
-function LoginPage({ onLogin }) {
+function LoginPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login: onLogin } = useContext(UserContext);
 
   const submit = event => {
     event.preventDefault();
     setError(null);
     setLoading(true);
-    login(username, password)
+    API.login(username, password)
       .then(user => {
         setLoading(false);
         onLogin(user);
