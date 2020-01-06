@@ -15,7 +15,7 @@ export const FAKE_EMAILS = [
   {
     id: 1,
     subject: 'React is great',
-    body: 'I thought I should let you know.'
+    body: 'I thought you should know.'
   },
   {
     id: 2,
