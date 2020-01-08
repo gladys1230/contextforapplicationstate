@@ -1,5 +1,5 @@
 import React, {
-  useState,
+  useReducer,
   useEffect,
   useContext
 } from 'react';
@@ -7,29 +7,62 @@ import { fetchEmails } from './api';
 
 const EmailContext = React.createContext();
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'begin':
+      return {
+        ...state,
+        loading: true,
+        error: null
+      };
+    case 'success':
+      return {
+        ...state,
+        loading: false,
+        emails: action.emails
+      };
+    case 'error':
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      };
+    case 'select_email':
+      return {
+        ...state,
+        currentEmail: action.email
+      };
+    default:
+      return state;
+  }
+}
+
 export function EmailProvider({ children }) {
-  const [emails, setEmails] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentEmail, setCurrentEmail] = useState(
-    null
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    emails: [],
+    loading: false,
+    error: null,
+    currentEmail: null
+  });
 
   // fetch emails
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    dispatch({ type: 'begin' });
     fetchEmails()
-      .then(emails => setEmails(emails))
-      .catch(error => setError(error))
-      .finally(() => setLoading(false));
+      .then(emails =>
+        dispatch({ type: 'success', emails })
+      )
+      .catch(error =>
+        dispatch({ type: 'error', error })
+      );
   }, []);
 
+  const setCurrentEmail = email => {
+    dispatch({ type: 'select_email', email });
+  };
+
   const value = {
-    emails,
-    loading,
-    error,
-    currentEmail,
+    ...state,
     setCurrentEmail
   };
 
