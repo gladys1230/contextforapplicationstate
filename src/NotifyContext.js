@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 const NotifyContext = React.createContext();
 
@@ -20,6 +20,18 @@ export function NotifyProvider({ children }) {
       messages.filter(m => m !== msg)
     );
   };
+
+  useEffect(() => {
+    const cleanup = () => {
+      const now = new Date().getTime();
+      setMessages(msgs =>
+        msgs.filter(m => now - m.addedAt < 3000)
+      );
+    };
+    const timer = setInterval(cleanup, 6000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const value = {
     messages,
