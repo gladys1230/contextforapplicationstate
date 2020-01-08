@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LoginPage from './LoginPage';
 import MainPage from './MainPage';
-import { UserProvider, useUser } from './UserContext';
-import { EmailProvider } from './EmailContext'; 
-import { NotifyProvider } from './NotifyContext';
+import { useUser } from './UserContext';
+import Providers from './Providers';
 import './index.css';
 
 function Root() {
@@ -13,12 +12,8 @@ function Root() {
 }
 
 ReactDOM.render(
-  <NotifyProvider>
-    <UserProvider>
-      <EmailProvider>
-        <Root />
-      </EmailProvider>
-    </UserProvider>
-  </NotifyProvider>,
+  <Providers>
+    <Root />
+  </Providers>,
   document.querySelector('#root')
 );
