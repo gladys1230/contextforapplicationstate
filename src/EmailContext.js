@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import { fetchEmails, fetchLatestEmails } from './api';
 import { useUser } from './UserContext';
+import { useNotify } from './NotifyContext';
 
 const EmailContext = React.createContext();
 
@@ -52,6 +53,7 @@ export function EmailProvider({ children }) {
   });
 
   const user = useUser();
+  const { addMessage } = useNotify();
 
   // fetch emails
   useEffect(() => {
@@ -71,6 +73,12 @@ export function EmailProvider({ children }) {
         fetchLatestEmails().then(emails => {
           if (emails.length > 0) {
             dispatch({ type: 'add_emails', emails });
+            //notify!
+            addMessage(
+              `${emails.length} email${
+                emails.length === 1 ? '' : 's'
+              } arrived`
+            );
           }
         });
       }
