@@ -64,7 +64,7 @@ export function login(username, password) {
 export function fetchEmails() {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve(LOTS_OF_EMAILS);
+      resolve(FAKE_EMAILS);
     }, 300);
   });
 }

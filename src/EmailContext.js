@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useContext
 } from 'react';
-import { fetchEmails } from './api';
+import { fetchEmails, fetchLatestEmails } from './api';
+import { useUser } from './UserContext';
 
 const EmailContext = React.createContext();
 
@@ -32,6 +33,11 @@ function reducer(state, action) {
         ...state,
         currentEmail: action.email
       };
+    case 'add_emails':
+      return {
+        ...state,
+        emails: [...state.emails, ...action.emails]
+      };
     default:
       return state;
   }
@@ -45,6 +51,8 @@ export function EmailProvider({ children }) {
     currentEmail: null
   });
 
+  const user = useUser();
+
   // fetch emails
   useEffect(() => {
     dispatch({ type: 'begin' });
@@ -56,6 +64,25 @@ export function EmailProvider({ children }) {
         dispatch({ type: 'error', error })
       );
   }, []);
+
+  useEffect(() => {
+    const refresh = () => {
+      if (!state.loading) {
+        fetchLatestEmails().then(emails => {
+          if (emails.length > 0) {
+            dispatch({ type: 'add_emails', emails });
+          }
+        });
+      }
+    };
+
+    let timer;
+    if (user) {
+      timer = setInterval(refresh, 3000);
+    }
+
+    return () => clearInterval(timer);
+  });
 
   const setCurrentEmail = email => {
     dispatch({ type: 'select_email', email });
